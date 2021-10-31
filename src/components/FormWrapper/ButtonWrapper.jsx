@@ -9,12 +9,11 @@ const ButtonWrapper = ({children, ...otherProps}) => {
     }
     const configButton = {
         variant: 'contained',
-        color: 'primary',
         fullWidth: true,
         onClick: handleSubmit
     }
     return (
-        <Button {...configButton}>
+        <Button {...configButton} style={{letterSpacing: '2px', backgroundColor: 'rgb(79, 45, 52)', color: 'white'}} >
             {children}
         </Button>
     )
