@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Grid, Container } from '@material-ui/core';
 import { Form, Formik } from 'formik';
+import {mobile} from '../../responsive'
 
 // component
 import TextFieldWrapper from '../../components/FormWrapper/TextFieldWrapper'
@@ -15,29 +16,30 @@ const FormContainer = styled.div`
     height: 100vh;
     display: flex;
     justify-content: center;
-    // flex-direction: column;
 `
 const Wrapper = styled.div`
     padding: 20px;
-    flex: 1;
+    flex: 2;
     align-self: center;
 `
 const Title = styled.h1`
     font-size: 3rem;
     font-weight: 500;
-    color: rgb(79 45 52);
+    color: rgb(1 111 129);
     margin-bottom: 30px;   
     text-align: center;
+    ${mobile({fontSize: '2rem', marginBottom: '20px'})};
 `
 const ImageContianer = styled.div`
-    flex: 2;
+    flex: 1;
     background: linear-gradient(
         rgba(0, 0, 0, 0),
         rgba(0, 0, 0, 0.5)
     ),
-    url("https://images.pexels.com/photos/6984661/pexels-photo-6984661.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
+    url("https://images.pexels.com/photos/7310199/pexels-photo-7310199.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940")
         center;
     background-size: cover;
+    ${mobile({display: 'none'})};
 `
 const Register = () => {
     return (
@@ -57,19 +59,22 @@ const Register = () => {
                                         return (
                                             <Form>
                                                 <Grid container spacing={2}>
-                                                    <Grid item xs={12} >
+                                                    <Grid item xs={window.innerWidth <= "380"? 12: 6} >
                                                         <TextFieldWrapper name='first_name' label='First Name' />
                                                     </Grid>
-                                                    <Grid item xs={12}>
+                                                    <Grid item xs={window.innerWidth <= "380"? 12: 6}>
                                                         <TextFieldWrapper name='last_name' label='Last Name' />
                                                     </Grid>
-                                                    <Grid item xs={12}>
+                                                    <Grid item xs={window.innerWidth <= "380"? 12: 6}>
+                                                        <TextFieldWrapper name='username' label='Username' />
+                                                    </Grid>
+                                                    <Grid item xs={window.innerWidth <= "380"? 12: 6}>
                                                         <TextFieldWrapper name='email' label='Email' />
                                                     </Grid>
-                                                    <Grid item xs={12}>
+                                                    <Grid item xs={window.innerWidth <= "380"? 12: 6}>
                                                         <TextFieldWrapper name='password' type='password' label='Password' />
                                                     </Grid>
-                                                    <Grid item xs={12}>
+                                                    <Grid item xs={window.innerWidth <= "380"? 12: 6}>
                                                         <TextFieldWrapper name='confirm_password' type='password' label='Confirm Password' />
                                                     </Grid>
                                                     <Grid item xs={12}>

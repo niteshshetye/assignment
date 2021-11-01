@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
+import {mobile} from '../../responsive'
 
 const Container = styled.div`
     height: 70vh;
@@ -12,10 +13,12 @@ const Title = styled.h1`
     margin: 30px 0px; 
     font-size: 3rem;
     letter-spacing: 2px;
+    ${mobile({fontSize: '2rem'})};
 `
 const Desc = styled.div`
     font-size: 1.3rem;
     margin-bottom: 10px;
+    ${mobile({fontSize: '0.9rem'})};
 `
 const InputContainer = styled.div`
     display: flex;
@@ -24,6 +27,7 @@ const InputContainer = styled.div`
     margin-top: 10px;
     width: 50%;
     height: 10%;
+    ${mobile({ width: "90%"})};
 `
 const Input = styled.input`
     width: 70%;

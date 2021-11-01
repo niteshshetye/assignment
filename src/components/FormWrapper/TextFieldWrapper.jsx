@@ -21,7 +21,7 @@ const TextFieldWrapper = ({name, ...otherProps}) => {
 
     return (
         <>
-            <TextField {...configTextField} inputProps={{style: {color: 'white', fontSize: '1.5rem'}}} />   
+            <TextField {...configTextField} inputProps={{style: {fontSize: '1rem'}}} />   
         </>
     )
 }

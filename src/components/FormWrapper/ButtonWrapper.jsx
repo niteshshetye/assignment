@@ -2,6 +2,7 @@ import React from 'react'
 import { Button } from '@material-ui/core'
 import { useFormikContext } from 'formik'
 
+
 const ButtonWrapper = ({children, ...otherProps}) => {
     const {submitForm} = useFormikContext()
     const handleSubmit = () => {
@@ -13,7 +14,7 @@ const ButtonWrapper = ({children, ...otherProps}) => {
         onClick: handleSubmit
     }
     return (
-        <Button {...configButton} style={{letterSpacing: '2px', backgroundColor: 'rgb(79, 45, 52)', color: 'white'}} >
+        <Button {...configButton} style={{letterSpacing: '2px', backgroundColor: ' rgb(1 111 129)', color: 'white'}} >
             {children}
         </Button>
     )

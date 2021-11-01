@@ -9,3 +9,8 @@
     /* color: rgb(83, 134, 134); */
     /* background-color: transparent; */
 }
+
+a{
+    text-decoration: none;
+    color: black;
+}

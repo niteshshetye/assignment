@@ -1,10 +1,12 @@
 import React from 'react'
 import styled from 'styled-components';
+import {mobile} from '../../responsive'
 
 const Container = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    ${mobile({flexDirection: 'column'})};
 `
 const Left = styled.div`
     flex: 1;
@@ -17,6 +19,7 @@ const Logo = styled.h1``
 const Desc = styled.div`
     margin: 20px 0px;
     font-weight: 500;
+    ${mobile({textAlign: 'justify'})};
 `
 const SocialConatainer = styled.div`
     display: flex;
@@ -58,6 +61,7 @@ const ListItem = styled.li`
     &: hover {
         color: teal;
     }
+    ${mobile({textAlign: 'center'})};
 `
 const Right = styled.div`
     flex: 1;

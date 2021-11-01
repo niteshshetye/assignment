@@ -1,12 +1,15 @@
 import React from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 // component
 
 // pages
-// import Home from './pages/Home/Home';
-// import ProductList from './pages/ProductList/ProductList';
-// import Product from './pages/Product/Product';
+import Home from './pages/Home/Home';
+import ProductList from './pages/ProductList/ProductList';
+import Product from './pages/Product/Product';
 import Register from './pages/Register/Register';
+import Login from './pages/Login/Login';
+import Cart from './pages/Cart/Cart'
 
 // css
 import './App.css'
@@ -15,10 +18,28 @@ import './App.css'
 const App = () => {
     return (
         <div className='App'>
-            {/* <Home /> */}
-            {/* <ProductList /> */}
-            {/* <Product /> */}
-            <Register />
+            <Router>
+                <Switch>
+                    <Route exact path='/productlist'>
+                        <ProductList />
+                    </Route>
+                    <Route exact path='/product'>
+                        <Product />
+                    </Route>
+                    <Route exact path='/register'>
+                        <Register />
+                    </Route>
+                    <Route exact path='/login'>
+                        <Login />
+                    </Route>
+                    <Route exact path='/cart'>
+                        <Cart />
+                    </Route>
+                    <Route exact path='/'>
+                        <Home />
+                    </Route>
+                </Switch>
+            </Router>
         </div>
     )
 }

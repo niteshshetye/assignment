@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 export const initialValues = {
     first_name: '',
     last_name: '',
+    username: '',
     email: '',
     password: '',
     confirm_password: ''
@@ -27,6 +28,7 @@ Yup.addMethod(Yup.string, 'equalTo', equalTo);
 export const validationSchema = Yup.object({
     first_name: Yup.string().required("Required"),
     last_name: Yup.string().required("Required"),
+    username: Yup.string().min(3, 'Username Atleast of 3 Charecters').required('Required'),
     email: Yup.string().email("Enter Valid Email").required("Required"),
     password: Yup.string().min(4, 'Password must be greater than 4 charecters').required("Required"),
     confirm_password: Yup.string().equalTo(Yup.ref('password'), 'Passwords must match').required('Password confirm is required')

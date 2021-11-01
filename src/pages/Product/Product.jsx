@@ -1,5 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import {mobile} from '../../responsive'
+
+// component
 import Annoucement from '../../components/Annoucement/Annoucement';
 import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
@@ -9,6 +12,7 @@ const Conatainer = styled.div``
 const Wrapper = styled.div`
     display: flex;
     padding: 50px;
+    ${mobile({flexDirection: 'column'})};
 `
 const ImageContainer = styled.div`
     flex: 1;
@@ -18,15 +22,18 @@ const Image = styled.img`
     width: 100%;
     height: 90vh;
     object-fit: cover;
+    ${mobile({height: '60vh'})};
 `
 const InfoContainer = styled.div`
     flex: 1;
 `
 const Title = styled.h1`
     font-weight: 200;
+    ${mobile({textAlign: 'center', paddingTop: '10px'})};
 `
 const Desc = styled.p`
     margin: 20px 0px;
+    ${mobile({textAlign: 'justify'})};
 `
 const Price = styled.span`
     font-weight: 100;
@@ -67,6 +74,7 @@ const AddContainer = styled.div`
     width: 80%;
     padding: 30px 0px;
     justify-content: space-between;
+    ${mobile({width: "100%", padding: '20px 0px'})}
 `
 const AmountContainer = styled.div`
     display: flex;
@@ -118,8 +126,8 @@ const Product = () => {
                         </Filter>
                         <Filter>
                             <FilterTitle>Size: </FilterTitle>
-                            <FilterSize>
-                                <FilterSizeOption>XS</FilterSizeOption>
+                            <FilterSize defaultValue={'xs'}>
+                                <FilterSizeOption value='xs'>XS</FilterSizeOption>
                                 <FilterSizeOption>S</FilterSizeOption>
                                 <FilterSizeOption>L</FilterSizeOption>
                                 <FilterSizeOption>M</FilterSizeOption>

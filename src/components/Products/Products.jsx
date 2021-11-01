@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import {mobile} from '../../responsive'
 // data
 import {popularProducts} from '../../data';
 
@@ -10,7 +11,9 @@ const Conatainer = styled.div`
     padding: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    ${mobile({padding: '10px 0px'})}
 `
 
 const Products = () => {
