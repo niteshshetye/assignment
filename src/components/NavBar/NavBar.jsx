@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { mobile } from '../../responsive'
 import { Link } from 'react-router-dom'
-
+import {useSelector} from 'react-redux';
 // cors
 import { Badge } from '@material-ui/core'
 
@@ -71,6 +71,7 @@ const MenuItem = styled.div`
 `
 
 const NavBar = () => {
+    const quantity = useSelector(state => state.cart.quantity)
     return (
         <Container>
             <Wrapper>
@@ -92,7 +93,7 @@ const NavBar = () => {
                     <MenuItem><Link to='/register'>Register</Link></MenuItem>
                     <MenuItem><Link to='/login'>Login</Link></MenuItem>
                     <MenuItem>
-                        <Badge badgeContent={4} color="primary">
+                        <Badge badgeContent={quantity} color="primary">
                             <Link to='/cart'>
                                 <i className="fas fa-shopping-cart"></i>
                             </Link>

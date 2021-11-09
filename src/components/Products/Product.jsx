@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components';
-
+import { Link } from 'react-router-dom';
 const Info = styled.div`
     opacity: 0;
     width: 100%;
@@ -70,7 +70,9 @@ const Product = ({product}) => {
                     <i className="fas fa-shopping-cart"></i>
                 </Icon>
                 <Icon>
-                    <i className="fas fa-search"></i>
+                    <Link to={`/product/${product._id}`}>
+                        <i className="fas fa-search"></i>
+                    </Link>
                 </Icon>
                 <Icon>
                     <i className="far fa-heart"></i>

@@ -1,6 +1,12 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled from 'styled-components'
 import {mobile} from '../../responsive'
+
+// redux
+import {useSelector} from 'react-redux'
+
+// stripe
+import StripeCheckout from 'react-stripe-checkout'
 
 // components
 import NavBar from '../../components/NavBar/NavBar'
@@ -138,6 +144,14 @@ const SummaryButton = styled.button`
 `
 
 const Cart = () => {
+    const {products, quantity, total} = useSelector(state => state.cart);
+    const [stripeToken, setStripeToken] = useState(null);
+    const KEY = process.env.STRIPE_PUBLIC_KEY;
+    // console.log('KEY', KEY);
+    const onToken = token => {
+        setStripeToken(token)
+    }
+    // console.log('STRIPE',stripeToken);
     return (
         <Container>
             <NavBar />
@@ -147,40 +161,48 @@ const Cart = () => {
                 <TopContainer>
                     <TopButton type='filled'>Continue Shopping</TopButton>
                     <TopTexts>
-                        <TopText>Shopping Bag (2)</TopText>
+                        <TopText>Shopping Bag ({quantity})</TopText>
                         <TopText>Your Wishlist (0)</TopText>
                     </TopTexts>
                     <TopButton type='filled'>Checkout Now</TopButton>
                 </TopContainer>
                 <BottomContainer>   
                     <Info>
-                        <Product>
-                            <ProductDetail>
-                                <Image src="https://images.pexels.com/photos/2529147/pexels-photo-2529147.jpeg?auto=compress&cs=tinysrgb&dpr=3&h=750&w=1260" />
-                                <Details>
-                                    <ProductName><b>Product: </b>Shoes</ProductName>
-                                    <ProductId><b>Id: </b>9145109233</ProductId>
-                                    <ProductColor color='black' />
-                                    <ProductSize><b>Size: </b>37</ProductSize>
-                                </Details>
-                            </ProductDetail>
-                            <PriceDetail>
-                                <ProductAmountContainer>
-                                    <i className="fas fa-minus"></i>
-                                    <ProductAmount>2</ProductAmount>
-                                    <i className="fas fa-plus"></i>
-                                </ProductAmountContainer>
-                                <ProductPrice>
-                                    $30
-                                </ProductPrice>
-                            </PriceDetail>
-                        </Product>
+                        {
+                            products.length === 0? <h2 style={{textAlign: 'center'}}>Your Cart is Empty</h2>: products.map(product => (
+                                <>
+                                    <Product key={product._id}>
+                                        <ProductDetail>
+                                            <Image src={product.img} />
+                                            <Details>
+                                                <ProductName><b>Product: </b>{product.title}</ProductName>
+                                                <ProductId><b>Id: </b>{product._id}</ProductId>
+                                                <ProductColor color={product.color} />
+                                                <ProductSize><b>Size: </b>{product.size}</ProductSize>
+                                            </Details>
+                                        </ProductDetail>
+                                        <PriceDetail>
+                                            <ProductAmountContainer>
+                                                <i className="fas fa-minus"></i>
+                                                <ProductAmount>{product.quantity}</ProductAmount>
+                                                <i className="fas fa-plus"></i>
+                                            </ProductAmountContainer>
+                                            <ProductPrice>
+                                                ${product.price*product.quantity}
+                                            </ProductPrice>
+                                        </PriceDetail>
+                                    </Product>
+                                    <Hr />
+                                </>
+                            ))
+                        }
+                        
                     </Info>
                     <Summary>
                         <SummaryTitle>Order Summary</SummaryTitle>
                         <SummaryItem>
                             <SummaryItemText>SubTotal </SummaryItemText>
-                            <SummaryItemPrice>$ 80</SummaryItemPrice>
+                            <SummaryItemPrice>$ {total}</SummaryItemPrice>
                         </SummaryItem>
                         <SummaryItem>
                             <SummaryItemText>Estimated Shipping</SummaryItemText>
@@ -192,9 +214,19 @@ const Cart = () => {
                         </SummaryItem>
                         <SummaryItem type='total'>
                             <SummaryItemText >Total</SummaryItemText>
-                            <SummaryItemPrice>$ 80</SummaryItemPrice>
+                            <SummaryItemPrice>$ {total}</SummaryItemPrice>
                         </SummaryItem>
-                        <SummaryButton>Checkout Now</SummaryButton>
+                        <StripeCheckout
+                            name='E-Commerce'
+                            billingAddress
+                            shippingAddress
+                            description = {`Your Total is $${total}`}
+                            amount = {total*100}
+                            stripeKey={KEY}
+                            token={onToken}
+                        >
+                            <SummaryButton>Checkout Now</SummaryButton>
+                        </StripeCheckout>
                     </Summary>
                 </BottomContainer>
             </Wrapper>
@@ -204,3 +236,4 @@ const Cart = () => {
 }
 
 export default Cart
+

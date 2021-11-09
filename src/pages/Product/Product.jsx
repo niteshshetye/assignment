@@ -1,6 +1,12 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
 import {mobile} from '../../responsive'
+import { useLocation } from 'react-router-dom';
+import {publicRequest} from '../../utils/axiosConfig';
+
+// redux
+import { addProduct } from '../../redux/cartRedux';
+import {useDispatch} from 'react-redux'
 
 // component
 import Annoucement from '../../components/Annoucement/Annoucement';
@@ -102,49 +108,76 @@ const Button = styled.button`
         color: white;
     }
 `
-
+const Loading = styled.h2`
+    text-align: center;
+    padding: 20px;
+    font-size: 3rem;
+`
 
 const Product = () => {
+    const dispatch = useDispatch()
+    const {pathname} = useLocation();
+    const _id = pathname.split('/')[2]
+    const [product, setProduct] = useState({});
+    const [quantity, setQuantity] = useState(1);
+    const [color, setColor] = useState('');
+    const [size, setSize] = useState('')
+
+    useEffect(() => {
+        const getSingleProduct = async() => {
+            const {data} = await publicRequest(`/products/find/${_id}`)
+            setProduct(data)
+        }
+        getSingleProduct();
+    }, [_id]);
+
+    const handleAddToCart = () => {
+        dispatch(addProduct({...product, quantity, color, size}));
+    }
+
     return (
         <Conatainer>
             <NavBar />
             <Annoucement />
-            <Wrapper>
-                <ImageContainer>
-                    <Image src="https://i.ibb.co/S6qMxwr/jean.jpg" />
-                </ImageContainer>
-                <InfoContainer>
-                    <Title>Denim Jumpsuit</Title>
-                    <Desc>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugit amet ducimus omnis non consequatur laborum id! Aliquam, corporis cupiditate laborum nam beatae, debitis placeat doloribus illo eveniet eligendi quo aspernatur!</Desc>
-                    <Price>$ 20</Price>
-                    <FilterContainer>
-                        <Filter>
-                            <FilterTitle>Color: </FilterTitle>
-                            <FilterColor color='black' />
-                            <FilterColor color='darkgray'/>
-                            <FilterColor color='gray'/>
-                        </Filter>
-                        <Filter>
-                            <FilterTitle>Size: </FilterTitle>
-                            <FilterSize defaultValue={'xs'}>
-                                <FilterSizeOption value='xs'>XS</FilterSizeOption>
-                                <FilterSizeOption>S</FilterSizeOption>
-                                <FilterSizeOption>L</FilterSizeOption>
-                                <FilterSizeOption>M</FilterSizeOption>
-                                <FilterSizeOption>XL</FilterSizeOption>
-                            </FilterSize>
-                        </Filter>
-                    </FilterContainer>
-                    <AddContainer>
-                        <AmountContainer>
-                            <i className="fa-solid fa-minus"></i>
-                            <Amount>1</Amount>
-                            <i className="fa-solid fa-plus"></i>
-                        </AmountContainer>
-                        <Button>ADD TO CART</Button>
-                    </AddContainer>
-                </InfoContainer>
-            </Wrapper>
+                {
+                    Object.keys(product).length === 0? <Loading>Loading...!</Loading>: (
+                        <Wrapper>
+                            <ImageContainer>
+                                <Image src={product.img} />
+                            </ImageContainer>
+                            <InfoContainer>
+                                <Title>{product.title}</Title>
+                                <Desc>{product.desc}</Desc>
+                                <Price>$ {product.price}</Price>
+                                <FilterContainer>
+                                    <Filter>
+                                        <FilterTitle>Color: </FilterTitle>
+                                        {
+                                            product.color.map(color => <FilterColor color={color} key={color} onClick={() => setColor(color)} />)
+                                        }
+                                    </Filter>
+                                    <Filter>
+                                        <FilterTitle>Size: </FilterTitle>
+                                        <FilterSize onChange={(e) => setSize(e.target.value)}>
+                                            {
+                                                product.size.map(size => <FilterSizeOption key={size} >{size}</FilterSizeOption>)
+                                            }
+                                        </FilterSize>
+                                    </Filter>
+                                </FilterContainer>
+                                <AddContainer>
+                                    <AmountContainer>
+                                        <i className="fa-solid fa-minus" onClick={() => quantity > 1 && setQuantity(quantity-1)}></i>
+                                        <Amount>{quantity}</Amount>
+                                        <i className="fa-solid fa-plus" onClick={() => setQuantity(quantity+1)}></i>
+                                    </AmountContainer>
+                                    <Button onClick={handleAddToCart}>ADD TO CART</Button>
+                                </AddContainer>
+                            </InfoContainer>
+                        </Wrapper>
+                )
+            }
+                
             <NewsLetter />
             <Footer />
         </Conatainer>

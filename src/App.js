@@ -20,10 +20,10 @@ const App = () => {
         <div className='App'>
             <Router>
                 <Switch>
-                    <Route exact path='/productlist'>
+                    <Route exact path='/productlist/:categories'>
                         <ProductList />
                     </Route>
-                    <Route exact path='/product'>
+                    <Route exact path='/product/:id'>
                         <Product />
                     </Route>
                     <Route exact path='/register'>
