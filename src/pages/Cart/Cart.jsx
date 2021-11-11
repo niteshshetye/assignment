@@ -150,7 +150,7 @@ const Cart = () => {
     const {products, quantity, total} = useSelector(state => state.cart.insideCart);
     const {currentUser} = useSelector(state => state.user)
     const [stripeToken, setStripeToken] = useState(null);
-    const KEY = "pk_test_51JrgXqSEBFJDCq8bnxHV54elUWu64fbZg2yrJlOW7VSHCNdugisuAga2hyBGZ1zA3Z93lLJxj46b4fchcgCX5ryu001tDWjDM4";
+    const KEY = process.env.STRIPE_KEY;
     const onToken = token => {
         setStripeToken(token)
     }
