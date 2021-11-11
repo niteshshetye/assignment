@@ -4,12 +4,17 @@ import { Grid, Container } from '@material-ui/core';
 import { Form, Formik } from 'formik';
 import {mobile} from '../../responsive'
 
+// redux 
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/apiCalls';
+
 // component
 import TextFieldWrapper from '../../components/FormWrapper/TextFieldWrapper'
 import ButtonWrapper from '../../components/FormWrapper/ButtonWrapper';
 
 // utils
-import {initialValues, validationSchema, handleSubmit} from '../../components/FormWrapper/Register'
+import {initialValues, validationSchema} from '../../components/FormWrapper/Register'
+import { publicRequest } from '../../utils/axiosConfig';
 
 const FormContainer = styled.div`
     width: 100vw;
@@ -42,6 +47,20 @@ const ImageContianer = styled.div`
     ${mobile({display: 'none'})};
 `
 const Register = () => {
+    const dispatch = useDispatch()
+    const handleSubmit = values => {
+        const {first_name, last_name, confirm_password, ...dataToSend} = values
+        const registerUser = async () => {
+            try{
+                const {data} = await publicRequest.post('/auth/register', dataToSend)
+                login(dispatch, dataToSend)
+            }catch(error){
+                console.log(error);
+            }
+        }
+        registerUser();
+        console.log(first_name, last_name, confirm_password, dataToSend)
+    }
     return (
         <FormContainer>
             <Wrapper>

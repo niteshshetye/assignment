@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{ useState, useEffect} from 'react'
 import styled from 'styled-components'
 import {mobile} from '../../responsive'
 
@@ -7,11 +7,13 @@ import {useSelector} from 'react-redux'
 
 // stripe
 import StripeCheckout from 'react-stripe-checkout'
+import {userRequest} from '../../utils/axiosConfig'
 
 // components
 import NavBar from '../../components/NavBar/NavBar'
 import Annoucement from '../../components/Annoucement/Annoucement'
 import Footer from '../../components/Footer/Footer'
+import { useHistory } from 'react-router'
 
 const Container = styled.div``
 const Wrapper = styled.div`
@@ -144,14 +146,29 @@ const SummaryButton = styled.button`
 `
 
 const Cart = () => {
-    const {products, quantity, total} = useSelector(state => state.cart);
+    const history = useHistory()
+    const {products, quantity, total} = useSelector(state => state.cart.insideCart);
+    const {currentUser} = useSelector(state => state.user)
     const [stripeToken, setStripeToken] = useState(null);
-    const KEY = process.env.STRIPE_PUBLIC_KEY;
-    // console.log('KEY', KEY);
+    const KEY = "pk_test_51JrgXqSEBFJDCq8bnxHV54elUWu64fbZg2yrJlOW7VSHCNdugisuAga2hyBGZ1zA3Z93lLJxj46b4fchcgCX5ryu001tDWjDM4";
     const onToken = token => {
         setStripeToken(token)
     }
-    // console.log('STRIPE',stripeToken);
+    useEffect(() => {
+        const makeRequest = async () => {
+            try{
+                const res = await userRequest.post('/checkout/payment', {
+                    tokenId: stripeToken.id,
+                    amount: 500,
+                });
+                console.log('res',res)
+                history.push('/success', {data: res.data})
+            }catch(error){
+                console.log(error);
+            }
+        }
+        stripeToken && makeRequest()
+    }, [stripeToken, total, history])
     return (
         <Container>
             <NavBar />
@@ -161,74 +178,75 @@ const Cart = () => {
                 <TopContainer>
                     <TopButton type='filled'>Continue Shopping</TopButton>
                     <TopTexts>
-                        <TopText>Shopping Bag ({quantity})</TopText>
+                        <TopText>Shopping Bag ({currentUser !== null && quantity})</TopText>
                         <TopText>Your Wishlist (0)</TopText>
                     </TopTexts>
                     <TopButton type='filled'>Checkout Now</TopButton>
                 </TopContainer>
-                <BottomContainer>   
-                    <Info>
-                        {
-                            products.length === 0? <h2 style={{textAlign: 'center'}}>Your Cart is Empty</h2>: products.map(product => (
-                                <>
-                                    <Product key={product._id}>
-                                        <ProductDetail>
-                                            <Image src={product.img} />
-                                            <Details>
-                                                <ProductName><b>Product: </b>{product.title}</ProductName>
-                                                <ProductId><b>Id: </b>{product._id}</ProductId>
-                                                <ProductColor color={product.color} />
-                                                <ProductSize><b>Size: </b>{product.size}</ProductSize>
-                                            </Details>
-                                        </ProductDetail>
-                                        <PriceDetail>
-                                            <ProductAmountContainer>
-                                                <i className="fas fa-minus"></i>
-                                                <ProductAmount>{product.quantity}</ProductAmount>
-                                                <i className="fas fa-plus"></i>
-                                            </ProductAmountContainer>
-                                            <ProductPrice>
-                                                ${product.price*product.quantity}
-                                            </ProductPrice>
-                                        </PriceDetail>
-                                    </Product>
-                                    <Hr />
-                                </>
-                            ))
-                        }
-                        
-                    </Info>
-                    <Summary>
-                        <SummaryTitle>Order Summary</SummaryTitle>
-                        <SummaryItem>
-                            <SummaryItemText>SubTotal </SummaryItemText>
-                            <SummaryItemPrice>$ {total}</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Estimated Shipping</SummaryItemText>
-                            <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem>
-                            <SummaryItemText>Sipping Discount</SummaryItemText>
-                            <SummaryItemPrice>$ -5.90</SummaryItemPrice>
-                        </SummaryItem>
-                        <SummaryItem type='total'>
-                            <SummaryItemText >Total</SummaryItemText>
-                            <SummaryItemPrice>$ {total}</SummaryItemPrice>
-                        </SummaryItem>
-                        <StripeCheckout
-                            name='E-Commerce'
-                            billingAddress
-                            shippingAddress
-                            description = {`Your Total is $${total}`}
-                            amount = {total*100}
-                            stripeKey={KEY}
-                            token={onToken}
-                        >
-                            <SummaryButton>Checkout Now</SummaryButton>
-                        </StripeCheckout>
-                    </Summary>
-                </BottomContainer>
+                    {
+                        currentUser === null? <h3 style={{color: 'gray', textAlign: 'center'}}>Please Login To see Your Cart Products</h3> : (
+                            <BottomContainer> 
+                                <Info>
+                                    {
+                                        products.length === 0? <h2 style={{textAlign: 'center'}}>Your Cart is Empty</h2>: products.map(product => (
+                                                <Product key={product._id}>
+                                                    <ProductDetail>
+                                                        <Image src={product.img} />
+                                                        <Details>
+                                                            <ProductName><b>Product: </b>{product.title}</ProductName>
+                                                            <ProductId><b>Id: </b>{product._id}</ProductId>
+                                                            <ProductColor color={product.color} />
+                                                            <ProductSize><b>Size: </b>{product.size}</ProductSize>
+                                                        </Details>
+                                                    </ProductDetail>
+                                                    <PriceDetail>
+                                                        <ProductAmountContainer>
+                                                            <i className="fas fa-minus"></i>
+                                                            <ProductAmount>{product.quantity}</ProductAmount>
+                                                            <i className="fas fa-plus"></i>
+                                                        </ProductAmountContainer>
+                                                        <ProductPrice>
+                                                            ${product.price*product.quantity}
+                                                        </ProductPrice>
+                                                    </PriceDetail>
+                                                </Product>
+                                        ))
+                                    }
+                                    <Hr />                        
+                                </Info>
+                                <Summary>
+                                    <SummaryTitle>Order Summary</SummaryTitle>
+                                    <SummaryItem>
+                                        <SummaryItemText>SubTotal </SummaryItemText>
+                                        <SummaryItemPrice>$ {total}</SummaryItemPrice>
+                                    </SummaryItem>
+                                    <SummaryItem>
+                                        <SummaryItemText>Estimated Shipping</SummaryItemText>
+                                        <SummaryItemPrice>$ 5.90</SummaryItemPrice>
+                                    </SummaryItem>
+                                    <SummaryItem>
+                                        <SummaryItemText>Sipping Discount</SummaryItemText>
+                                        <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+                                    </SummaryItem>
+                                    <SummaryItem type='total'>
+                                        <SummaryItemText >Total</SummaryItemText>
+                                        <SummaryItemPrice>$ {total}</SummaryItemPrice>
+                                    </SummaryItem>
+                                    <StripeCheckout
+                                        name='E-Commerce'
+                                        billingAddress
+                                        shippingAddress
+                                        description = {`Your Total is $${total}`}
+                                        amount = {total*100}
+                                        stripeKey={KEY}
+                                        token={onToken}
+                                    >
+                                        <SummaryButton>Checkout Now</SummaryButton>
+                                    </StripeCheckout>
+                                </Summary>
+                            </BottomContainer>
+                        )
+                    }  
             </Wrapper>
             <Footer />
         </Container>

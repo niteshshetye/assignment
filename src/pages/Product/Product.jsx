@@ -5,14 +5,16 @@ import { useLocation } from 'react-router-dom';
 import {publicRequest} from '../../utils/axiosConfig';
 
 // redux
-import { addProduct } from '../../redux/cartRedux';
+// import { addProduct } from '../../redux/cartRedux';
 import {useDispatch} from 'react-redux'
+import { addToCart } from '../../redux/apiCalls';
 
 // component
 import Annoucement from '../../components/Annoucement/Annoucement';
 import Footer from '../../components/Footer/Footer';
 import NavBar from '../../components/NavBar/NavBar';
 import NewsLetter from '../../components/NewsLetter/NewsLetter';
+import { getUserFromLocalStorage } from '../../utils/localStorageAccess';
 
 const Conatainer = styled.div``
 const Wrapper = styled.div`
@@ -121,7 +123,8 @@ const Product = () => {
     const [product, setProduct] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState('');
-    const [size, setSize] = useState('')
+    const [size, setSize] = useState('S');
+    const {_id: userId} = getUserFromLocalStorage()
 
     useEffect(() => {
         const getSingleProduct = async() => {
@@ -132,7 +135,8 @@ const Product = () => {
     }, [_id]);
 
     const handleAddToCart = () => {
-        dispatch(addProduct({...product, quantity, color, size}));
+        addToCart(dispatch, {...product, quantity, color, size, userId})
+        // dispatch(addProduct({...product, quantity, color, size}));
     }
 
     return (

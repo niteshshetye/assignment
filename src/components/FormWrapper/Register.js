@@ -34,6 +34,4 @@ export const validationSchema = Yup.object({
     confirm_password: Yup.string().equalTo(Yup.ref('password'), 'Passwords must match').required('Password confirm is required')
 })
 
-export const handleSubmit = values => {
-    console.log(values)
-}
+

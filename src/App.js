@@ -1,5 +1,6 @@
 import React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch,Redirect } from 'react-router-dom'
+import { useSelector } from 'react-redux';
 
 // component
 
@@ -16,6 +17,7 @@ import './App.css'
 
 
 const App = () => {
+    const user = useSelector(state => state.user)
     return (
         <div className='App'>
             <Router>
@@ -27,10 +29,10 @@ const App = () => {
                         <Product />
                     </Route>
                     <Route exact path='/register'>
-                        <Register />
+                        {user.currentUser? <Redirect to='/' />: <Register />}
                     </Route>
                     <Route exact path='/login'>
-                        <Login />
+                        {user.currentUser? <Redirect to='/' />: <Login />}     
                     </Route>
                     <Route exact path='/cart'>
                         <Cart />

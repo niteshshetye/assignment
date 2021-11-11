@@ -3,13 +3,17 @@ import styled from 'styled-components';
 import {Grid, Container} from '@material-ui/core'
 import { Formik, Form } from 'formik';
 import {mobile} from '../../responsive'
+import {Link} from 'react-router-dom'
+
+import {useDispatch, useSelector} from 'react-redux';
+import {login} from '../../redux/apiCalls'
 
 // components
 import TextFieldWrapper from '../../components/FormWrapper/TextFieldWrapper'
 import ButtonWrapper from '../../components/FormWrapper/ButtonWrapper'
 
 // utils
-import {initialValues, validationSchema, handleSubmit} from '../../components/FormWrapper/Login'
+import {initialValues, validationSchema} from '../../components/FormWrapper/Login'
 
 const LoginContainer = styled.div`
     width: 100vw;
@@ -26,7 +30,7 @@ const Title = styled.h1`
     margin-bottom: 20px;
     text-align: center;
 `
-const Link = styled.a`
+const Button = styled.a`
     display: flex;
     justify-content: ${props => props.name === 'password'? "right": "center"};
     padding: 5px;
@@ -47,6 +51,12 @@ const ImageContianer = styled.div`
     ${mobile({display: 'none'})}
 `
 const Login = () => {
+    const {error} = useSelector(state => state.user)
+    const dispatch = useDispatch()
+
+    const handleSubmit = values => {
+        login(dispatch, values)
+    }
     return (
         <LoginContainer>
             <Wrapper>
@@ -70,13 +80,16 @@ const Login = () => {
                                                     <TextFieldWrapper name='password' label='Password' type='password' />
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    <Link name='password'>Forgot Password?</Link>
+                                                    <Button name='password'>Forgot Password?</Button>
                                                 </Grid>
                                                 <Grid item xs={12}>
                                                     <ButtonWrapper type='submit'>Login</ButtonWrapper>
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    <Link name='account'>Create A New Account</Link>
+                                                    {error && <h4 style={{color: 'red'}}>Something Went Wrong</h4>}
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Button name='account'><Link to='/register'>Create A New Account</Link></Button>
                                                 </Grid>
                                             </Grid>
                                         </Form>

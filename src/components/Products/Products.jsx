@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {mobile} from '../../responsive';
-import axios from 'axios';
-// data
-// import {popularProducts} from '../../data';
+
+// reducer api call
+import { loadAllProducts } from '../../redux/apiCalls';
+import { useDispatch } from 'react-redux';
 
 // component
 import Product from './Product';
+import { useSelector } from 'react-redux';
 
 const Conatainer = styled.div`
     padding: 20px;
@@ -17,22 +19,24 @@ const Conatainer = styled.div`
     ${mobile({padding: '10px 0px'})}
 `
 
-const Products = ({categories, filter, sort}) => {
-    console.log(categories, filter, sort)
-    const [products, setProducts] = useState([]);
+const Products = ({categories = null, filter, sort}) => {
+    const {products} = useSelector(state => state.products)
+    const dispatch = useDispatch()
+    // const [products, setProducts] = useState([]);
     const [filtredProducts, setFilterdProducts] = useState([]);
 
     useEffect(() => {
         const getProducts = async () => {
             try{
-                const {data} = await axios(categories? `http://localhost:5000/api/products?categories=${categories}`: `http://localhost:5000/api/products`)
-                setProducts(data);
+                loadAllProducts(dispatch, categories)
+                // const {data} = await axios(categories? `http://localhost:5000/api/products?categories=${categories}`: `http://localhost:5000/api/products`)
+                // setProducts(data);
             }catch(error){
                 console.log('featching data error', error)
             }
         }
         getProducts();
-    }, [categories]);
+    }, [dispatch,categories]);
 
     useEffect(() => {
         categories && setFilterdProducts(products.filter(product => 

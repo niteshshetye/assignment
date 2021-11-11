@@ -1,70 +1,89 @@
-# Getting Started with Create React App
+### Redux toolkit 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Install redux, react-redux, @reduxjs/toolkit packages
 
-## Available Scripts
+# STEP_1: Create Store
+-> import {configureStore} from '@reduxjs/toolkit';
+-> import userReducer from '../../reducer/userReducer'; // created in step no. 2
+-> syntax
 
-In the project directory, you can run:
+->  const store = configureStore({
+        reducer:{
+            user: userReducer, // the reducer which is imported pass it here from step no. 2
+        },
+    })
 
-### `npm start`
+then 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+-> import {Provider} from 'react-redux';
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+<Provider store={store}>
+    <App />
+</Provider>
 
-### `npm test`
+# STEP_2: Create the Reducer
+here in my case i create the user Reducer in userReducer.js file
+### inside userReducer.js file
+for that first i import 'createSlice' which help to create the reducer in redux-toolkit
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+-> import {createSlice} from '@reduxjs/toolkit';
 
-### `npm run build`
+then lets use it 
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+->  const userReducer = createSlice({
+        name: 'user',
+        initailState: {
+            name: "",
+            age: null,
+            email: "",
+        },
+        reducers: {
+            loginUser: (state, action) => {
+                state.name = action.payload.name;
+                state.age = action.payload.age;
+                state.email = action.payload.email;
+            },
+            logoutUser: (state) => {
+                state.name = "";
+                state.age = null;
+                state.email = "";
+            }
+        }
+    });
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+now our reducer is also ready so lets export important things
+first export the constant and export the reducer
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+->  export const {loginUser, logoutUser} = userSlice.acions;
+->  export default userSlice.reducer; 
 
-### `npm run eject`
+__now check the first step i have written which part is added after this implementation__
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Now our reducer and store ready 
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+### To use our state we use 'useSelector' from 'react-redux';
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+-> import {useSelector} from 'react-redux';
 
-## Learn More
+-> syntax
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+-> const state = useSelector(state => state.user) // this will written only the user state from the store  
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### To Change the state we need an actions and to execute action we need the "useDispatch" from 'react-redux';
+-> import {loginUser, logoutUser} from '../../reducers/userReducer';
+-> import {useDispatch} from 'react-redux';
 
-### Code Splitting
+-> syntax
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+-> const dispatch = useDispatch();
 
-### Analyzing the Bundle Size
+and whenver in the logic need to dispatch the action just write 
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+// here user is action.payload the data inside user is comes from may be input feilds from login form  
+-> dispatch(loginUser(user));
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+when need to login remember we not pass any action in reducer 
+// just keep it empty here
+-> dispatch(logoutUser());
