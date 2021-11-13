@@ -52,14 +52,14 @@ const Register = () => {
         const {first_name, last_name, confirm_password, ...dataToSend} = values
         const registerUser = async () => {
             try{
-                const {data} = await publicRequest.post('/auth/register', dataToSend)
+                await publicRequest.post('/auth/register', dataToSend)
+                // const {data} = await publicRequest.post('/auth/register', dataToSend)
                 login(dispatch, dataToSend)
             }catch(error){
                 console.log(error);
             }
         }
         registerUser();
-        console.log(first_name, last_name, confirm_password, dataToSend)
     }
     return (
         <FormContainer>

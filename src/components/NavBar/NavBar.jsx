@@ -94,8 +94,11 @@ const NavBar = () => {
     
     const handleLogut = () => {
         dispatch(logoutUser());
-        // console.log('logout hit.')
         history.push('/login')
+    }
+    const handleAdmin = () => {
+        history.push('/admin');
+        console.log('admin hit...!');
     }
     return (
         <Container>
@@ -122,7 +125,9 @@ const NavBar = () => {
                             <MenuItem><Link to='/login'>Login</Link></MenuItem>
                         )
                     }
-                    {/* <MenuItem><Link to='/register'>Register</Link></MenuItem> */}
+                    {
+                        (currentUser !== null && currentUser.isAdmin === true) && <MenuItem><Button onClick={handleAdmin}>Admin Panel</Button></MenuItem>
+                    }
                     <MenuItem>
                         <Badge badgeContent={currentUser !== null? quantity : 0} color="primary">
                             <Link to='/cart'>

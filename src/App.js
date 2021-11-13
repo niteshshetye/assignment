@@ -11,6 +11,7 @@ import Product from './pages/Product/Product';
 import Register from './pages/Register/Register';
 import Login from './pages/Login/Login';
 import Cart from './pages/Cart/Cart'
+import Admin from './pages/admin/pages';
 
 // css
 import './App.css'
@@ -27,6 +28,9 @@ const App = () => {
                     </Route>
                     <Route exact path='/product/:id'>
                         <Product />
+                    </Route>
+                    <Route exact path='/admin' >
+                        {!(user.currentUser && user.currentUser.isAdmin)? <Redirect to='/' />: <Admin />}
                     </Route>
                     <Route exact path='/register'>
                         {user.currentUser? <Redirect to='/' />: <Register />}
