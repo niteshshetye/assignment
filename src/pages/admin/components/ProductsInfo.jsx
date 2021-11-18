@@ -1,7 +1,9 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, {useEffect} from 'react'
 import styled from 'styled-components'
 
+import { loadAllProducts } from '../../../redux/apiCalls';
+import { useDispatch,useSelector } from 'react-redux';
+import Spinner from '../../../components/Spinner';
 
 const Container = styled.div`
     padding: 20px;
@@ -17,7 +19,12 @@ const Img = styled.img`
 `
 
 const ProductsInfo = () => {
-    const {products} = useSelector(state => state.products)
+    const {products, isFetching} = useSelector(state => state.products);
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        loadAllProducts(dispatch)
+    }, [])
 
     return (
         <Container>
@@ -25,34 +32,40 @@ const ProductsInfo = () => {
                 Our Products
             </TopHeading>
             <DisplayData>
-                    {
-                        products.length === 0? <h2 style={{textAlign: 'center'}}>Loding...!</h2>: (
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">ID</th>
-                                        <th scope="col">Image</th>
-                                        <th scope="col">Title</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">inStock</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        products.map(prduct => (
-                                            <tr key={prduct._id}>
-                                                <th scope="row">{prduct._id}</th>
-                                                <td><Img src={prduct.img} /></td>
-                                                <td>{prduct.title}</td>
-                                                <td>{prduct.price}$</td>
-                                                <td>{prduct.inStock+''}</td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </table>
-                        )
-                    }
+                {
+                    isFetching? <Spinner />: (
+                        <>
+                        {
+                            products.length === 0? <h2 style={{textAlign: 'center'}}>No Data Found</h2>: (
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">Image</th>
+                                            <th scope="col">Title</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">inStock</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {
+                                            products.map(prduct => (
+                                                <tr key={prduct._id}>
+                                                    <th scope="row">{prduct._id}</th>
+                                                    <td><Img src={prduct.img} /></td>
+                                                    <td>{prduct.title}</td>
+                                                    <td>{prduct.price}$</td>
+                                                    <td>{prduct.inStock+''}</td>
+                                                </tr>
+                                            ))
+                                        }
+                                    </tbody>
+                                </table>
+                            )
+                        }
+                        </>
+                    )
+                }
             </DisplayData>
         </Container>
     )

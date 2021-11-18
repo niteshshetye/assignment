@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import {mobile} from '../../responsive';
+import Spinner from '../Spinner';
 
 // reducer api call
 import { loadAllProducts } from '../../redux/apiCalls';
@@ -20,17 +21,15 @@ const Conatainer = styled.div`
 `
 
 const Products = ({categories = null, filter, sort}) => {
-    const {products} = useSelector(state => state.products)
+    const {products, isFetching} = useSelector(state => state.products)
     const dispatch = useDispatch()
-    // const [products, setProducts] = useState([]);
     const [filtredProducts, setFilterdProducts] = useState([]);
 
     useEffect(() => {
         const getProducts = async () => {
             try{
                 loadAllProducts(dispatch, categories)
-                // const {data} = await axios(categories? `http://localhost:5000/api/products?categories=${categories}`: `http://localhost:5000/api/products`)
-                // setProducts(data);
+                
             }catch(error){
                 console.log('featching data error', error)
             }
@@ -58,10 +57,17 @@ const Products = ({categories = null, filter, sort}) => {
     return (
         <Conatainer>
             {
-                categories? 
-                    filtredProducts.map(product => <Product key={product._id} product={product} />)
-                    : products.slice(0,8).map(product => <Product key={product._id} product={product} />)
+                isFetching? <Spinner />: (
+                    <>
+                    {
+                        categories? 
+                            filtredProducts.map(product => <Product key={product._id} product={product} />)
+                            : products.slice(0,8).map(product => <Product key={product._id} product={product} />)
+                    }
+                    </>
+                )
             }
+            
         </Conatainer>
     )
 }

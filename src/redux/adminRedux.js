@@ -8,7 +8,7 @@ const adminReducer = createSlice({
             isFetching: false,
             error: false,
             isDeleting: false,
-            idEditing: false
+            isEditing: false
         },
         addProduct: {
             product: {},
@@ -43,7 +43,7 @@ const adminReducer = createSlice({
             state.users.error = true;
         },
         editUserStart: (state) => {
-            state.users.idEditing = true;
+            state.users.isEditing = true;
         },
         editUserSuccess: (state, action) => {
             state.users.isEditing = false;
@@ -53,7 +53,7 @@ const adminReducer = createSlice({
             state.users.allUsers = [...remainingUsers];
         },
         editUserFaild: (state) => {
-            state.users.idEditing = false;
+            state.users.isEditing = false;
             state.users.error = true;
         },
         addProductStart: (state) => {

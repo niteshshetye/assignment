@@ -18,6 +18,8 @@ const Heading = styled.h3`
     letter-spacing: 2px;
     font-size: 1rem;
     cursor: pointer;
+    margin-bottom: 0;
+;
 `
 const List = styled.ul`
     list-style: none;

@@ -117,6 +117,7 @@ const Loading = styled.h2`
 `
 
 const Product = () => {
+
     const dispatch = useDispatch()
     const {pathname} = useLocation();
     const _id = pathname.split('/')[2]
@@ -124,7 +125,6 @@ const Product = () => {
     const [quantity, setQuantity] = useState(1);
     const [color, setColor] = useState('');
     const [size, setSize] = useState('S');
-    const {_id: userId} = getUserFromLocalStorage()
 
     useEffect(() => {
         const getSingleProduct = async() => {
@@ -135,8 +135,8 @@ const Product = () => {
     }, [_id]);
 
     const handleAddToCart = () => {
+        const {_id: userId} = getUserFromLocalStorage()
         addToCart(dispatch, {...product, quantity, color, size, userId})
-        // dispatch(addProduct({...product, quantity, color, size}));
     }
 
     return (
