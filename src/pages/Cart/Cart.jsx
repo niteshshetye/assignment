@@ -6,8 +6,8 @@ import {mobile} from '../../responsive'
 import {useSelector} from 'react-redux'
 
 // stripe
-// import StripeCheckout from 'react-stripe-checkout'
-// import {userRequest} from '../../utils/axiosConfig'
+import StripeCheckout from 'react-stripe-checkout'
+import {userRequest} from '../../utils/axiosConfig'
 
 // components
 import NavBar from '../../components/NavBar/NavBar'
@@ -157,6 +157,24 @@ const Cart = () => {
     const {products, quantity, total} = useSelector(state => state.cart.insideCart);
     const {currentUser} = useSelector(state => state.user)
     
+    const KEY = process.env.REACT_APP_STRIPE_KEY;
+
+    const onToken = token => {
+        const body = {
+            token,
+            amount: total,
+        }
+        const makePayment = async() => {
+            try{
+                const res = await userRequest.post('/checkout/payment', body)
+                console.log('res',res)
+                // history.push('/success', {data: res.data})
+            }catch(error){
+                console.log(error);
+            }
+        }
+        makePayment()
+    }
 
     const handleEmptyCart = () => {
         dispatch(clearCart())
@@ -229,7 +247,17 @@ const Cart = () => {
                                         <SummaryItemText >Total</SummaryItemText>
                                         <SummaryItemPrice>$ {total}</SummaryItemPrice>
                                     </SummaryItem>
-                                    <SummaryButton>Checkout Now</SummaryButton>   
+                                    <StripeCheckout
+                                        name='E-Commerce'
+                                        billingAddress
+                                        shippingAddress
+                                        description = {`Your Total is $${total}`}
+                                        amount = {total*100}
+                                        stripeKey={KEY}
+                                        token={onToken}
+                                    >
+                                        <SummaryButton>Checkout Now</SummaryButton>   
+                                    </StripeCheckout> 
                                 </Summary>
                             </BottomContainer>
                         )
@@ -244,35 +272,24 @@ export default Cart
 
 
 /* 
-<StripeCheckout
-    name='E-Commerce'
-    billingAddress
-    shippingAddress
-    description = {`Your Total is $${total}`}
-    amount = {total*100}
-    stripeKey={KEY}
-    token={onToken}
->
-</StripeCheckout> 
-*/
 
-// const [stripeToken, setStripeToken] = useState(null);
-// const KEY = process.env.STRIPE_KEY;
-// const onToken = token => {
-//     setStripeToken(token)
-// }
-// useEffect(() => {
-//     const makeRequest = async () => {
-//         try{
-//             const res = await userRequest.post('/checkout/payment', {
-//                 tokenId: stripeToken.id,
-//                 amount: 500,
-//             });
-//             console.log('res',res)
-//             history.push('/success', {data: res.data})
-//         }catch(error){
-//             console.log(error);
-//         }
-//     }
-//     stripeToken && makeRequest()
-// }, [stripeToken, total, history]);
+const KEY = process.env.STRIPE_KEY;
+const onToken = token => {
+    setStripeToken(token)
+}
+useEffect(() => {
+    const makeRequest = async () => {
+        try{
+            const res = await userRequest.post('/checkout/payment', {
+                tokenId: stripeToken.id,
+                amount: 500,
+            });
+            console.log('res',res)
+            history.push('/success', {data: res.data})
+        }catch(error){
+            console.log(error);
+        }
+    }
+    stripeToken && makeRequest()
+}, [stripeToken, total, history]);
+*/

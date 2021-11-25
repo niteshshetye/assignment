@@ -135,10 +135,17 @@ const Product = () => {
     }, [_id]);
 
     const handleAddToCart = () => {
-        const {_id: userId} = getUserFromLocalStorage()
-        addToCart(dispatch, {...product, quantity, color, size, userId})
+        const user = getUserFromLocalStorage();
+        if(user){
+            // console.log("userId is there", user._id);
+            const {_id: userId} = user;
+            addToCart(dispatch, {...product, quantity, color, size, userId})
+        }else{
+            // console.log("userId is not present", user);
+            alert("Please Login first");    
+        }
     }
-
+    
     return (
         <Conatainer>
             <NavBar />

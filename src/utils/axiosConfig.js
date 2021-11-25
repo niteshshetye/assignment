@@ -21,5 +21,5 @@ export const publicRequest = axios.create({
 
 export const userRequest = axios.create({
     baseURL: BASE_URL,
-    headers: {...configHeader}
+    headers: {...configHeader, "Content-Type": "application/json"}
 })

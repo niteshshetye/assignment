@@ -24,6 +24,7 @@ const ProductsInfo = () => {
 
     useEffect(() => {
         loadAllProducts(dispatch)
+        // eslint-disable-next-line
     }, [])
 
     return (

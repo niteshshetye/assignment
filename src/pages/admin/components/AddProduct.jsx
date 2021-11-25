@@ -95,6 +95,7 @@ const onSubmit = values => {
     console.log('Values: ', values);
     const addProductData = async (product) => {
         try{
+            // eslint-disable-next-line
             const {data} = await userRequest.post('/products', product);
             toast.success('Product Add Succfully', {
                 position: "top-right",
