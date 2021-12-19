@@ -19,6 +19,7 @@ import './App.css'
 
 const App = () => {
     const user = useSelector(state => state.user)
+
     return (
         <div className='App'>
             <Router>
